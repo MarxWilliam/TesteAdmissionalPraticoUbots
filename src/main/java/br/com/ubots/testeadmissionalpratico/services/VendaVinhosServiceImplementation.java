@@ -12,7 +12,7 @@ import java.util.Map;
 import br.com.ubots.testeadmissionalpratico.dao.LeJSON;
 import br.com.ubots.testeadmissionalpratico.model.Cliente;
 import br.com.ubots.testeadmissionalpratico.model.Info;
-import br.com.ubots.testeadmissionalpratico.model.Item;
+import br.com.ubots.testeadmissionalpratico.model.Vinho;
 import br.com.ubots.testeadmissionalpratico.model.Venda;
 
 public class VendaVinhosServiceImplementation implements VendaVinhosService {
@@ -69,8 +69,8 @@ public class VendaVinhosServiceImplementation implements VendaVinhosService {
 	private void printCompras(List<Venda> listaVendas) {
 		for(Venda venda:listaVendas) {
 			System.out.println("Código: " + venda.getCodigo() + " Data: "+ venda.getData() + " Cliente: " + venda.getCpfCliente());
-			for(Item item:venda.getItens()) {
-				System.out.println("\tProduto: " + item.getProduto() + " Variedade: " + item.getVariedade() + " País: " + item.getPais() + " Categoria: " + item.getCategoria() + " Safra: " + item.getSafra() + " Preço: "+ item.getPreco());
+			for(Vinho vinho:venda.getItens()) {
+				System.out.println("\tProduto: " + vinho.getProduto() + " Variedade: " + vinho.getVariedade() + " País: " + vinho.getPais() + " Categoria: " + vinho.getCategoria() + " Safra: " + vinho.getSafra() + " Preço: "+ vinho.getPreco());
 			}
 			System.out.println("Valor total dessa venda: " + venda.getValorTotalVenda() + "\n//  //  //");
 		}

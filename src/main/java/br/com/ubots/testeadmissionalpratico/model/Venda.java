@@ -8,14 +8,14 @@ public class Venda {
 	private String codigo;
 	private ZonedDateTime data;
 	private String cpfCliente;
-	private List<Item> itens;
+	private List<Vinho> itens;
 	private double valorTotalVenda;
 	
     public Venda() {
     	
     }	
 	
-	public Venda(String codigo, ZonedDateTime data, String cpfCliente, List<Item> itens, double valorTotal) {
+	public Venda(String codigo, ZonedDateTime data, String cpfCliente, List<Vinho> itens, double valorTotal) {
 		this.codigo = codigo;
 		this.data = data;
 		this.cpfCliente = cpfCliente;
@@ -40,10 +40,10 @@ public class Venda {
 	public void setCpfCliente(String cpfCliente) {
 		this.cpfCliente = cpfCliente;
 	}
-	public List<Item> getItens() {
+	public List<Vinho> getItens() {
 		return itens;
 	}
-	public void setItens(List<Item> itens) {
+	public void setItens(List<Vinho> itens) {
 		this.itens = itens;
 	}
 	public double getValorTotalVenda() {

@@ -22,7 +22,7 @@ import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
 import br.com.ubots.testeadmissionalpratico.model.Cliente;
-import br.com.ubots.testeadmissionalpratico.model.Item;
+import br.com.ubots.testeadmissionalpratico.model.Vinho;
 import br.com.ubots.testeadmissionalpratico.model.Venda;
 import br.com.ubots.testeadmissionalpratico.util.DataPadrao;
 
@@ -102,8 +102,8 @@ public class LeJSON {
 		return tmpInfo;
 	}
 	
-	public List<Item> parseVendasItens(JSONArray array) {
-		List<Item> lista = new ArrayList<>();
+	public List<Vinho> parseVendasItens(JSONArray array) {
+		List<Vinho> lista = new ArrayList<>();
 		
 		Iterator it = array.iterator();
 		while (it.hasNext()) {
@@ -112,8 +112,8 @@ public class LeJSON {
 	
 		return lista;
 	}
-	public Item parseVendasItem(JSONObject infoJson) {
-		Item tmpInfo = new Item();
+	public Vinho parseVendasItem(JSONObject infoJson) {
+		Vinho tmpInfo = new Vinho();
 		tmpInfo.setProduto(infoJson.get("produto").toString());
 		tmpInfo.setVariedade(infoJson.get("variedade").toString());
 		tmpInfo.setPais(infoJson.get("pais").toString());

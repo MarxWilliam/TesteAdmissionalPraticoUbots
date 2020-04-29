@@ -1,6 +1,6 @@
 package br.com.ubots.testeadmissionalpratico.model;
 
-public class Item {
+public class Vinho {
 	private String produto;
 	private String variedade;
 	private String pais;
@@ -9,11 +9,11 @@ public class Item {
 	private double preco;
 	
 	
-	public Item() {
+	public Vinho() {
 		
 	}
 	
-	public Item(String produto, String variedade, String pais, String categoria, int safra, double preco) {
+	public Vinho(String produto, String variedade, String pais, String categoria, int safra, double preco) {
 		this.produto = produto;
 		this.variedade = variedade;
 		this.pais = pais;
