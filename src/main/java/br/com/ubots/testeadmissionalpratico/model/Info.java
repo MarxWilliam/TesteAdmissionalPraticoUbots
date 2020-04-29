@@ -4,6 +4,8 @@ import java.util.List;
 
 public class Info {
 	Cliente cliente;
+	String codigoMaiorCompradoCliente;
+	double valorMaiorCompraCliente;
 	double totalComprasCliente;
 	List<Venda> listaVendas;
 	
@@ -37,4 +39,21 @@ public class Info {
 	public void setListaVendas(List<Venda> listaVendas) {
 		this.listaVendas = listaVendas;
 	}
+
+	public String getCodigoMaiorCompradoCliente() {
+		return codigoMaiorCompradoCliente;
+	}
+
+	public void setCodigoMaiorCompradoCliente(String codigoMaiorCompradoCliente) {
+		this.codigoMaiorCompradoCliente = codigoMaiorCompradoCliente;
+	}
+
+	public double getValorMaiorCompraCliente() {
+		return valorMaiorCompraCliente;
+	}
+
+	public void setValorMaiorCompraCliente(double valorMaiorCompraCliente) {
+		this.valorMaiorCompraCliente = valorMaiorCompraCliente;
+	}
+
 }

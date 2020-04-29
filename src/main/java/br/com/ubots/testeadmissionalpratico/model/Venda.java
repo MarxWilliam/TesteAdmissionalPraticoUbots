@@ -9,7 +9,7 @@ public class Venda {
 	private ZonedDateTime data;
 	private String cpfCliente;
 	private List<Item> itens;
-	private double valorTotal;
+	private double valorTotalVenda;
 	
     public Venda() {
     	
@@ -20,7 +20,7 @@ public class Venda {
 		this.data = data;
 		this.cpfCliente = cpfCliente;
 		this.itens = itens;
-		this.valorTotal = valorTotal;
+		this.valorTotalVenda = valorTotal;
 	}
 	public String getCodigo() {
 		return codigo;
@@ -46,11 +46,11 @@ public class Venda {
 	public void setItens(List<Item> itens) {
 		this.itens = itens;
 	}
-	public double getValorTotal() {
-		return valorTotal;
+	public double getValorTotalVenda() {
+		return valorTotalVenda;
 	}
-	public void setValorTotal(double valorTotal) {
-		this.valorTotal = valorTotal;
+	public void setValorTotalVenda(double valorTotal) {
+		this.valorTotalVenda = valorTotal;
 	}
 	
 	

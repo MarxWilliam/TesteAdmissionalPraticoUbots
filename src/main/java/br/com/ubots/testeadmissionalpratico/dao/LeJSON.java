@@ -97,7 +97,7 @@ public class LeJSON {
 		String data = infoJson.get("data").toString();
 		tmpInfo.setData(this.dt.parse(data));
 		tmpInfo.setCpfCliente(trataCpf(infoJson.get("cliente").toString()));
-		tmpInfo.setValorTotal(Double.parseDouble(infoJson.get("valorTotal").toString()));
+		tmpInfo.setValorTotalVenda(Double.parseDouble(infoJson.get("valorTotal").toString()));
 		tmpInfo.setItens(parseVendasItens((JSONArray)infoJson.get("itens")));
 		return tmpInfo;
 	}

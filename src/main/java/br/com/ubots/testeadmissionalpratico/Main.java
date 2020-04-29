@@ -6,7 +6,9 @@ import br.com.ubots.testeadmissionalpratico.services.VendaVinhosServiceImplement
 public class Main {
 	public static void main(String[] args) {
 		VendaVinhosServiceImplementation vinhos = new VendaVinhosServiceImplementation();
-		vinhos.mesclaInfo();
-		vinhos.printMap();
+		vinhos.maiorValorTotaldeComprasproCliente();
+		
+		System.out.println("\n~ ~ ~ ~ ~ ~ ~ ~ ~ ~  ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ \n");
+		vinhos.clienteComMaiorCompraUnica(2016);
 	}
 }
