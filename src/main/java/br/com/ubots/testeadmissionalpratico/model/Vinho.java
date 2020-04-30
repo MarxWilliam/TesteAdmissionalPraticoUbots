@@ -7,7 +7,7 @@ public class Vinho {
 	private String categoria;
 	private int safra;
 	private double preco;
-	
+	private int quantVezesComprado = 0;
 	
 	public Vinho() {
 		
@@ -57,6 +57,13 @@ public class Vinho {
 	public void setPreco(double preco) {
 		this.preco = preco;
 	}
-	
+
+	public int getQuantVezesComprado() {
+		return quantVezesComprado;
+	}
+
+	public void setQuantVezesComprado(int quantVezesComprado) {
+		this.quantVezesComprado = quantVezesComprado;
+	}
 	
 }

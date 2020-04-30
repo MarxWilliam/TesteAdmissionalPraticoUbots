@@ -1,5 +1,7 @@
 package br.com.ubots.testeadmissionalpratico.model;
 
+import java.util.LinkedHashMap;
+import java.util.LinkedList;
 import java.util.List;
 
 public class Info {
@@ -8,6 +10,12 @@ public class Info {
 	double valorMaiorCompraCliente;
 	double totalComprasCliente;
 	List<Venda> listaVendas;
+	LinkedList<Categoria> grafo;
+	
+	double valorMedioVinhos;
+	double desvioPadraoValorMedioVinhos;
+	
+	
 	
 	public Info() {
 		
@@ -56,4 +64,30 @@ public class Info {
 		this.valorMaiorCompraCliente = valorMaiorCompraCliente;
 	}
 
+
+	public double getValorMedioVinhos() {
+		return valorMedioVinhos;
+	}
+
+	public void setValorMedioVinhos(double valorMedioVinhos) {
+		this.valorMedioVinhos = valorMedioVinhos;
+	}
+
+	public double getDesvioPadraoValorMedioVinhos() {
+		return desvioPadraoValorMedioVinhos;
+	}
+
+	public void setDesvioPadraoValorMedioVinhos(double desvioPadraoValorMedioVinhos) {
+		this.desvioPadraoValorMedioVinhos = desvioPadraoValorMedioVinhos;
+	}
+
+	public LinkedList<Categoria> getGrafo() {
+		return grafo;
+	}
+
+	public void setGrafo(LinkedList<Categoria> grafo) {
+		this.grafo = grafo;
+	}
+
+	
 }

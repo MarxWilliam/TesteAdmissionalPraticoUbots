@@ -10,5 +10,11 @@ public class Main {
 		
 		System.out.println("\n~ ~ ~ ~ ~ ~ ~ ~ ~ ~  ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ \n");
 		vinhos.clienteComMaiorCompraUnica(2016);
+		
+		vinhos.montaMatriz();
+		
+		vinhos.printGrafoCategoria();
+		System.out.println("\n~ ~ ~ ~ ~ ~ ~ ~ ~ ~  ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ \n");
+		vinhos.printGrafo();
 	}
 }
