@@ -1,6 +1,6 @@
 package br.com.ubots.testeadmissionalpratico;
 
-import br.com.ubots.testeadmissionalpratico.services.VendaVinhosService;
+import br.com.ubots.testeadmissionalpratico.services.IVendaVinhosService;
 import br.com.ubots.testeadmissionalpratico.services.VendaVinhosServiceImplementation;
 
 public class Main {
@@ -16,5 +16,11 @@ public class Main {
 		vinhos.printGrafoCategoria();
 		System.out.println("\n~ ~ ~ ~ ~ ~ ~ ~ ~ ~  ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ \n");
 		vinhos.printGrafo();
+		
+		System.out.println("\n~ ~ ~ ~ ~ ~ ~ ~ ~ ~  ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ \n");
+		vinhos.calculaPotuacaoTotal();
+		
+		System.out.println("\n~ ~ ~ ~ ~ ~ ~ ~ ~ ~  ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ \n");
+		vinhos.recomendaVinho("00000000001", 20);
 	}
 }

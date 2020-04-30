@@ -14,11 +14,12 @@ import br.com.ubots.testeadmissionalpratico.dao.LeJSON;
 import br.com.ubots.testeadmissionalpratico.model.Cliente;
 import br.com.ubots.testeadmissionalpratico.model.Info;
 import br.com.ubots.testeadmissionalpratico.model.Vinho;
+import br.com.ubots.testeadmissionalpratico.util.VinhoComparator;
 import br.com.ubots.testeadmissionalpratico.model.Categoria;
 import br.com.ubots.testeadmissionalpratico.model.Celula;
 import br.com.ubots.testeadmissionalpratico.model.Venda;
 
-public class VendaVinhosServiceImplementation implements VendaVinhosService {
+public class VendaVinhosServiceImplementation implements IVendaVinhosService {
 	List<Cliente> listaClientes;
 	List<Venda> listaVendas;
 	LinkedHashMap<String, Info> map;
@@ -119,7 +120,7 @@ public class VendaVinhosServiceImplementation implements VendaVinhosService {
 		this.printMap();
 	}
 
-	public void procuraMaiorCompraCliente(int ano) {
+	public void procuraMaiorCompraTodososCliente(int ano) {
 		for (String cpf : map.keySet()) {
 			double valorMaiorCompradoCliente = 0;
 			String codigoMaiorCompradoCliente = null;
@@ -133,10 +134,24 @@ public class VendaVinhosServiceImplementation implements VendaVinhosService {
 			map.get(cpf).setValorMaiorCompraCliente(valorMaiorCompradoCliente);
 		}
 	}
+	
+	public void procuraMaiorCompraCliente(String cpf, int ano) {
+			double valorMaiorCompradoCliente = 0;
+			String codigoMaiorCompradoCliente = null;
+			for (Venda v : map.get(cpf).getListaVendas()) {
+				if (v.getData().getYear() == ano && v.getValorTotalVenda() > valorMaiorCompradoCliente) {
+					codigoMaiorCompradoCliente = v.getCodigo();
+					valorMaiorCompradoCliente = v.getValorTotalVenda();
+				}
+			}
+			map.get(cpf).setCodigoMaiorCompradoCliente(codigoMaiorCompradoCliente);
+			map.get(cpf).setValorMaiorCompraCliente(valorMaiorCompradoCliente);
+		
+	}
 
 	@Override
 	public void clienteComMaiorCompraUnica(int ano) {
-		procuraMaiorCompraCliente(ano);
+		procuraMaiorCompraTodososCliente(ano);
 		String cpfMax = null;
 		double maxValorCompra = 0;
 		String codigoMaiorCompra = null;
@@ -423,8 +438,94 @@ public class VendaVinhosServiceImplementation implements VendaVinhosService {
 					}
 				}
 			}
-
+			//calcula pontuação de cada item
+			for (Categoria c : map.get(cpf).getGrafo()) {
+				int soma = 0;
+				for(Celula cell : c.getLista()) {
+					soma += cell.getPeso();
+				}
+				c.getLista().add(new Celula("", "peso", soma/5));
+			}
 		}
+	}
+	
+	public void calculaPotuacaoTotal() {
+		for (String cpf : map.keySet()) {
+			System.out.println(map.get(cpf).getCliente().getNome());
+			for (Venda v : map.get(cpf).getListaVendas()) {
+				for(Vinho vinho:v.getItens()) {
+					vinho.setPontuacao(calculaPontuacao(vinho, cpf));
+					System.out.println(vinho.getProduto() + " - " + vinho.getVariedade() + " - " + " - " + vinho.getPais() 
+					+ " - "+ vinho.getCategoria() + " - " +  vinho.getSafra() + " - " + vinho.getPreco() + " - Peso: "
+				    + vinho.getPontuacao());
+				}
+			}
+		}
+		System.out.println();
+	}
+	
+	@Override
+	public void  recomendaVinho(String cpf, int quant) {
+		List<Vinho> listaVinhos = new LinkedList<>();
+		for (Venda v : map.get(cpf).getListaVendas()) {
+			for(Vinho vinho:v.getItens()) {
+			    vinho.setPontuacao(calculaPontuacao(vinho, cpf));
+			    listaVinhos.add(vinho);
+			}	
+		}
+		Info info = map.get(cpf);
+		info.calculaValorMediodeVinhoseDesvio(); //calcula media e desvio padrão do preço dos vinhos comprados
+		double valor = info.getValorMedioVinhos() + info.getDesvioPadraoValorMedioVinhos();
+		for (Vinho v : listaVinhos) {
+			v.setDistancia(Math.abs(valor - v.getPreco()));
+		}
+		System.out.println("Quanto maior a pontuação e menor a distância do maior preço que o cliente costuma pagar melhor.");
+		System.out.println("Media: " + info.getValorMedioVinhos() + " Desvio: " + info.getDesvioPadraoValorMedioVinhos() + " soma: " + (info.getValorMedioVinhos() + info.getDesvioPadraoValorMedioVinhos()));
+		Collections.sort(listaVinhos, new VinhoComparator());
+		for (int i = 0; i < (quant < listaVinhos.size() ? quant : listaVinhos.size()); i++) {
+			Vinho vinho = listaVinhos.get(i);
+			System.out.println(vinho.getProduto() + " - " + vinho.getVariedade() + " - " + " - " + vinho.getPais() 
+			+ " - "+ vinho.getCategoria() + " - " +  vinho.getSafra() + " - " + vinho.getPreco() + " - Peso: " + vinho.getPontuacao() + " Dist: " + vinho.getDistancia());		
+		}
+	
+	}
+	
+	public int calculaPontuacao(Vinho vinho, String cpf) {
+		int soma = 0;
+		for (Categoria c : map.get(cpf).getGrafo()) {
+				if(vinho.getProduto().equalsIgnoreCase(c.getTitulo()) && c.getCategoria().equalsIgnoreCase("vinho")) {
+					soma += c.getLista().getLast().getPeso();
+				}
+				if(vinho.getVariedade().equalsIgnoreCase(c.getTitulo()) && c.getCategoria().equalsIgnoreCase("variedade")) {
+					soma += c.getLista().getLast().getPeso();
+				}
+				if(vinho.getPais().equalsIgnoreCase(c.getTitulo()) && c.getCategoria().equalsIgnoreCase("pais")) {
+					soma += c.getLista().getLast().getPeso();
+				}
+				if(vinho.getCategoria().equalsIgnoreCase(c.getTitulo()) && c.getCategoria().equalsIgnoreCase("categoria")) {
+					soma += c.getLista().getLast().getPeso();
+				}
+				if(String.valueOf(vinho.getSafra()).equalsIgnoreCase(c.getTitulo()) && c.getCategoria().equalsIgnoreCase("safra")) {
+					soma += c.getLista().getLast().getPeso();
+				}
+		}
+		return soma;
 	}
 
 }
+
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		

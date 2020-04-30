@@ -12,3 +12,16 @@ tipo 1     1              1            1
 tipo 2             1             1           1    
 2009       1              1            1             
 2010               1             1           1      
+
+
+Algoritmo de ordenação das recomendações:
+
+	> <  -4
+	> =  -3
+	> >  -2
+	= <  -1
+	= =  0
+	= >  1
+	< <  2
+	< =  3
+	< >  4

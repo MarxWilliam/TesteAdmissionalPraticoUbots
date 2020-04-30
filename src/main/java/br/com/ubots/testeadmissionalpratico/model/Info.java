@@ -4,6 +4,12 @@ import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
 
+
+
+/*
+ * Classe que armazena todas as informações referente ao um cliente em específico 
+ * 
+ */
 public class Info {
 	Cliente cliente;
 	String codigoMaiorCompradoCliente;
@@ -31,6 +37,30 @@ public class Info {
 		return cliente;
 	}
 
+	
+	/**
+	 * Calcula a média do valor de todos os vinhos vendidos para este cliente e o desvio padrão.
+	 */
+	public void calculaValorMediodeVinhoseDesvio() {
+		int count = 0;
+		double soma = 0;
+		for(Venda v : this.listaVendas) {
+			for(Vinho vinho : v.getItens()) {
+				soma += vinho.getPreco();
+				count++;
+			}
+		}
+		setValorMedioVinhos(soma/(double)count);
+		double somatorio = 0;
+		for(Venda v : this.listaVendas) {
+			for(Vinho vinho : v.getItens()) {
+				somatorio += Math.pow((vinho.getPreco() - getValorMedioVinhos()), 2);
+			}
+		}
+		double desvio = Math.sqrt(somatorio/(double)count);
+		setDesvioPadraoValorMedioVinhos(desvio);
+	}
+	
 	public void setCliente(Cliente cliente) {
 		this.cliente = cliente;
 	}
@@ -88,6 +118,5 @@ public class Info {
 	public void setGrafo(LinkedList<Categoria> grafo) {
 		this.grafo = grafo;
 	}
-
 	
 }

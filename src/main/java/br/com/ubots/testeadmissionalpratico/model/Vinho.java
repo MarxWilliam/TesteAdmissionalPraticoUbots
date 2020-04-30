@@ -8,6 +8,8 @@ public class Vinho {
 	private int safra;
 	private double preco;
 	private int quantVezesComprado = 0;
+	private double pontuacao;
+	private double distancia;
 	
 	public Vinho() {
 		
@@ -65,5 +67,22 @@ public class Vinho {
 	public void setQuantVezesComprado(int quantVezesComprado) {
 		this.quantVezesComprado = quantVezesComprado;
 	}
+
+	public double getPontuacao() {
+		return pontuacao;
+	}
+
+	public void setPontuacao(double pontuacao) {
+		this.pontuacao = pontuacao;
+	}
+
+	public double getDistancia() {
+		return distancia;
+	}
+
+	public void setDistancia(double distancia) {
+		this.distancia = distancia;
+	}
+	
 	
 }
