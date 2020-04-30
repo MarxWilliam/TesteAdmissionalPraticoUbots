@@ -222,8 +222,8 @@ public class VendaVinhosServiceImplementation implements VendaVinhosService {
 			// é feita inserção pra cada categoria isso permite que exista nome de produto e
 			// categoria iguais
 			for (Venda v : map.get(cpf).getListaVendas()) {
-				boolean existente = false;
 				for (Vinho vinho : v.getItens()) {
+					boolean existente = false;
 					for (Categoria c : map.get(cpf).getGrafo()) {
 						if (c.getTitulo().equalsIgnoreCase(vinho.getProduto())
 								&& c.getCategoria().equalsIgnoreCase("vinho")) {
@@ -237,8 +237,8 @@ public class VendaVinhosServiceImplementation implements VendaVinhosService {
 			}
 
 			for (Venda v : map.get(cpf).getListaVendas()) {
-				boolean existente = false;
 				for (Vinho vinho : v.getItens()) {
+					boolean existente = false;
 					for (Categoria c : map.get(cpf).getGrafo()) {
 						if (c.getTitulo().equalsIgnoreCase(vinho.getVariedade())
 								&& c.getCategoria().equalsIgnoreCase("variedade")) {
@@ -252,8 +252,8 @@ public class VendaVinhosServiceImplementation implements VendaVinhosService {
 			}
 
 			for (Venda v : map.get(cpf).getListaVendas()) {
-				boolean existente = false;
 				for (Vinho vinho : v.getItens()) {
+					boolean existente = false;
 					for (Categoria c : map.get(cpf).getGrafo()) {
 						if (c.getTitulo().equalsIgnoreCase(vinho.getPais())
 								&& c.getCategoria().equalsIgnoreCase("pais")) {
@@ -267,8 +267,8 @@ public class VendaVinhosServiceImplementation implements VendaVinhosService {
 			}
 
 			for (Venda v : map.get(cpf).getListaVendas()) {
-				boolean existente = false;
 				for (Vinho vinho : v.getItens()) {
+					boolean existente = false;
 					for (Categoria c : map.get(cpf).getGrafo()) {
 						if (c.getTitulo().equalsIgnoreCase(vinho.getCategoria())
 								&& c.getCategoria().equalsIgnoreCase("categoria")) {
@@ -282,8 +282,8 @@ public class VendaVinhosServiceImplementation implements VendaVinhosService {
 			}
 
 			for (Venda v : map.get(cpf).getListaVendas()) {
-				boolean existente = false;
 				for (Vinho vinho : v.getItens()) {
+					boolean existente = false;
 					for (Categoria c : map.get(cpf).getGrafo()) {
 						if (c.getTitulo().equalsIgnoreCase(String.valueOf(vinho.getSafra()))
 								&& c.getCategoria().equalsIgnoreCase("safra")) {
