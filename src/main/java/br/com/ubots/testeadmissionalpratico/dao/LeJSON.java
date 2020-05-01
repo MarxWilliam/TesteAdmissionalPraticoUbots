@@ -27,7 +27,6 @@ import br.com.ubots.testeadmissionalpratico.model.Venda;
 import br.com.ubots.testeadmissionalpratico.util.DataPadrao;
 
 public class LeJSON {	
-	DataPadrao dt = new DataPadrao();
 	public List<Cliente> leJSONCliente(File file) {
 
 		JSONObject jsonObject = new JSONObject();
@@ -95,7 +94,7 @@ public class LeJSON {
 		Venda tmpInfo = new Venda();
 		tmpInfo.setCodigo(infoJson.get("codigo").toString());
 		String data = infoJson.get("data").toString();
-		tmpInfo.setData(this.dt.parse(data));
+		tmpInfo.setData(DataPadrao.parse(data));
 		tmpInfo.setCpfCliente(trataCpf(infoJson.get("cliente").toString()));
 		tmpInfo.setValorTotalVenda(Double.parseDouble(infoJson.get("valorTotal").toString()));
 		tmpInfo.setItens(parseVendasItens((JSONArray)infoJson.get("itens")));

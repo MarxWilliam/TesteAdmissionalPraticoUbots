@@ -2,6 +2,7 @@ package br.com.ubots.testeadmissionalpratico.services;
 
 import java.io.File;
 import java.io.IOException;
+import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -14,15 +15,22 @@ import br.com.ubots.testeadmissionalpratico.dao.LeJSON;
 import br.com.ubots.testeadmissionalpratico.model.Cliente;
 import br.com.ubots.testeadmissionalpratico.model.Info;
 import br.com.ubots.testeadmissionalpratico.model.Vinho;
+import br.com.ubots.testeadmissionalpratico.util.InfoClienteComparator;
 import br.com.ubots.testeadmissionalpratico.util.VinhoComparator;
 import br.com.ubots.testeadmissionalpratico.model.Categoria;
 import br.com.ubots.testeadmissionalpratico.model.Celula;
 import br.com.ubots.testeadmissionalpratico.model.Venda;
 
 public class VendaVinhosServiceImplementation implements IVendaVinhosService {
-	List<Cliente> listaClientes;
-	List<Venda> listaVendas;
-	LinkedHashMap<String, Info> map;
+	private List<Cliente> listaClientes;
+	private List<Venda> listaVendas;
+	private LinkedHashMap<String, Info> map;
+	//private double mediaVendas = 0;
+	//private double mediaValorVinhosVendidos = 0;
+	////private double desvioPadraoMediaVendas = 0;
+	//private double desvioPadraoMediaVinhos = 0;
+	//private int countVendas = 0;
+	//private int countVinhosVendidos = 0;
 
 	public VendaVinhosServiceImplementation() {
 		this.map = new LinkedHashMap<>();
@@ -31,17 +39,17 @@ public class VendaVinhosServiceImplementation implements IVendaVinhosService {
 			File fileClientes = new File(f.getCanonicalPath() + "\\src\\resources\\598b16291100004705515ec5.json");
 			LeJSON leJSON = new LeJSON();
 			listaClientes = leJSON.leJSONCliente(fileClientes);
-			this.printClientes(listaClientes);
+			//this.printClientes(listaClientes);
 
 			File fileCompras = new File(f.getCanonicalPath() + "\\src\\resources\\598b16861100004905515ec7.json");
 			listaVendas = leJSON.leJSONCompras(fileCompras);
-			this.printCompras(listaVendas);
+			//this.printCompras();
 			mesclaInfo();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 	}
-
+	
 	public void mesclaInfo() { // "0000.000.000.02"
 		for (Cliente cliente : this.listaClientes) {
 			map.put(cliente.getCpf(), new Info(cliente, 0, new ArrayList<Venda>()));
@@ -55,23 +63,152 @@ public class VendaVinhosServiceImplementation implements IVendaVinhosService {
 		}
 	}
 
-	public void printMap() {
+	@Override
+	public void  recomendaVinho(String cpf, int quant) {
+		montaMatriz();
+		calculaPotuacaoTotal();
+		List<Vinho> listaVinhos = new LinkedList<>();
+		for (Venda v : map.get(cpf).getListaVendas()) {
+			for(Vinho vinho:v.getItens()) {
+			    vinho.setPontuacao(calculaPontuacao(vinho, cpf));
+			    listaVinhos.add(vinho);
+			}	
+		}
+		Info info = map.get(cpf);
+		info.calculaValorMediodeVinhoseDesvio(); //calcula media e desvio padrão do preço dos vinhos comprados
+		double valor = info.getValorMedioVinhos() + info.getDesvioPadraoValorMedioVinhos();
+		for (Vinho v : listaVinhos) {
+			v.setDistancia(Math.abs(valor - v.getPreco()));
+		}
+		System.out.println("Quanto maior a pontuação e menor a distância do maior preço que o cliente costuma pagar melhor.");
+		System.out.println("Media: " + info.getValorMedioVinhos() + " Desvio: " + info.getDesvioPadraoValorMedioVinhos() + " soma: " + (info.getValorMedioVinhos() + info.getDesvioPadraoValorMedioVinhos()) + "\n");
+		Collections.sort(listaVinhos, new VinhoComparator());
+		for (int i = 0; i < (quant < listaVinhos.size() ? quant : listaVinhos.size()); i++) {
+			Vinho vinho = listaVinhos.get(i);
+			System.out.println(vinho.getProduto() + " - " + vinho.getVariedade() + " - " + " - " + vinho.getPais() 
+			+ " - "+ vinho.getCategoria() + " - " +  vinho.getSafra() + " - " + vinho.getPreco() + " - Peso: " + vinho.getPontuacao() + " Dist: " + vinho.getDistancia());		
+		}
+	
+	}
+	
+	public int calculaPontuacao(Vinho vinho, String cpf) {
+		int soma = 0;
+		for (Categoria c : map.get(cpf).getGrafo()) {
+				if(vinho.getProduto().equalsIgnoreCase(c.getTitulo()) && c.getCategoria().equalsIgnoreCase("vinho")) {
+					soma += c.getLista().getLast().getPeso();
+				}
+				if(vinho.getVariedade().equalsIgnoreCase(c.getTitulo()) && c.getCategoria().equalsIgnoreCase("variedade")) {
+					soma += c.getLista().getLast().getPeso();
+				}
+				if(vinho.getPais().equalsIgnoreCase(c.getTitulo()) && c.getCategoria().equalsIgnoreCase("pais")) {
+					soma += c.getLista().getLast().getPeso();
+				}
+				if(vinho.getCategoria().equalsIgnoreCase(c.getTitulo()) && c.getCategoria().equalsIgnoreCase("categoria")) {
+					soma += c.getLista().getLast().getPeso();
+				}
+				if(String.valueOf(vinho.getSafra()).equalsIgnoreCase(c.getTitulo()) && c.getCategoria().equalsIgnoreCase("safra")) {
+					soma += c.getLista().getLast().getPeso();
+				}
+		}
+		return soma;
+	}
+
+	public void procuraMaiorCompraTodososCliente(int ano) {
 		for (String cpf : map.keySet()) {
-			printInfo(map.get(cpf));
+			double valorMaiorCompradoCliente = 0;
+			String codigoMaiorCompradoCliente = null;
+			for (Venda v : map.get(cpf).getListaVendas()) {
+				if (v.getData().getYear() == ano && v.getValorTotalVenda() > valorMaiorCompradoCliente) {
+					codigoMaiorCompradoCliente = v.getCodigo();
+					valorMaiorCompradoCliente = v.getValorTotalVenda();
+				}
+			}
+			map.get(cpf).setCodigoMaiorCompradoCliente(codigoMaiorCompradoCliente);
+			map.get(cpf).setValorMaiorCompraCliente(valorMaiorCompradoCliente);
 		}
 	}
 
-	public void printInfo(Info info) {
-		System.out.println("// - // - //    // - // - //    // - // - //");
-		printCliente(info.getCliente());
-		System.out.println("// - // - //");
-		printCompras(info.getListaVendas());
-		System.out.println("Total compras do cliente: " + info.getTotalComprasCliente());
-		System.out.println("// - // - //    // - // - //    // - // - //\n\n");
+	@Override
+	public void clienteComMaiorCompraUnica(int ano) {
+		try {
+		procuraMaiorCompraTodososCliente(ano);
+		String cpfMax = null;
+		double maxValorCompra = 0;
+		String codigoMaiorCompra = null;
+		for (String cpf : map.keySet()) {
+			if (map.get(cpf).getValorMaiorCompraCliente() > maxValorCompra) {
+				Info info = map.get(cpf); // info Por Cliente
+				codigoMaiorCompra = info.getCodigoMaiorCompradoCliente();
+				maxValorCompra = info.getValorMaiorCompraCliente();
+				cpfMax = cpf;
+			}
+		}
+
+		System.out.println("Cliente: " + map.get(cpfMax).getCliente().getNome() + " CPF: " + cpfMax + " Compra código: "
+				+ codigoMaiorCompra + " Valor: " + maxValorCompra);
+		} catch(NullPointerException ex) {
+			System.out.println("Esse ano não consta na base de dados.");
+		}
 	}
 
-	private void printCompras(List<Venda> listaVendas) {
-		for (Venda venda : listaVendas) {
+	@Override
+	public void maiorValorTotaldeComprasporCliente() {
+		this.ordenaPorTotalcomprasClienteDesc(this.getMap());
+		//System.out.println("///////////////////////////////////////////////////////////////");
+		//this.printMap();
+		for(String cpf : map.keySet()) {
+			Info c = map.get(cpf);
+			System.out.println("Cliente: " + c.getCliente().getNome() + " CPF: " + cpf + " Montante: " + c.getTotalComprasCliente());
+		}
+	}
+	
+	public void selecionaListaClientesMaisFieis(ZonedDateTime ano) {
+		//calculaMediaValorVendaseVinhoscomDesvio();
+		System.out.println("Clientes mais Fieis: ");
+		LinkedList<Info> clientesFieis = new LinkedList<>();
+		double montante = 0;
+		for (String cpf : map.keySet()) {
+			Info info = map.get(cpf);
+			for (Venda v : info.getListaVendas()) {
+				if (v.getData().isAfter(ano.minusYears(1)) && v.getData().isBefore(ano)) {
+					 info.setMontanteComprasUltimoAno(info.getMontanteComprasUltimoAno() + v.getValorTotalVenda());
+					 //info.setQuantidadeItensUltimoAno(info.getQuantidadeItensUltimoAno() + v.getItens().size());
+					 montante += v.getValorTotalVenda();
+				}
+			}
+		}
+		
+		double media = montante/map.size();
+		
+		for (String cpf : map.keySet()) {
+			if(map.get(cpf).getMontanteComprasUltimoAno()>media) {
+				clientesFieis.add(map.get(cpf));
+			}
+		}
+		
+		Collections.sort(clientesFieis, new InfoClienteComparator());		
+		
+		System.out.println("Med. de Venda: "  + media + "Montante: " + montante);
+		for(Info info : clientesFieis) {
+			info.getCliente().printCliente();
+			System.out.println("Montante: " + info.getMontanteComprasUltimoAno());
+		}
+	}
+	
+	public void printMap() {
+		for (String cpf : map.keySet()) {
+			map.get(cpf).printInfo();
+		}
+	}
+
+	public void printClientes(List<Cliente> listaClientes) {
+		for (Cliente cli : listaClientes) {
+			System.out.println("id: " + cli.getId() + " nome: " + cli.getNome() + " cpf: " + cli.getCpf());
+		}
+	}
+	
+	private void printCompras() {
+		for (Venda venda : this.listaVendas) {
 			System.out.println("Código: " + venda.getCodigo() + " Data: " + venda.getData() + " Cliente: "
 					+ venda.getCpfCliente());
 			for (Vinho vinho : venda.getItens()) {
@@ -80,17 +217,6 @@ public class VendaVinhosServiceImplementation implements IVendaVinhosService {
 						+ vinho.getSafra() + " Preço: " + vinho.getPreco());
 			}
 			System.out.println("Valor total dessa venda: " + venda.getValorTotalVenda() + "\n//  //  //");
-		}
-
-	}
-
-	public void printCliente(Cliente cliente) {
-		System.out.println("id: " + cliente.getId() + " nome: " + cliente.getNome() + " cpf: " + cliente.getCpf());
-	}
-
-	public void printClientes(List<Cliente> listaClientes) {
-		for (Cliente cli : listaClientes) {
-			System.out.println("id: " + cli.getId() + " nome: " + cli.getNome() + " cpf: " + cli.getCpf());
 		}
 	}
 
@@ -112,62 +238,22 @@ public class VendaVinhosServiceImplementation implements IVendaVinhosService {
 			mapVenda.put(e.getKey(), e.getValue());
 		}
 	}
-
-	@Override
-	public void maiorValorTotaldeComprasproCliente() {
-		this.ordenaPorTotalcomprasClienteDesc(this.getMap());
-		System.out.println("///////////////////////////////////////////////////////////////");
-		this.printMap();
-	}
-
-	public void procuraMaiorCompraTodososCliente(int ano) {
-		for (String cpf : map.keySet()) {
-			double valorMaiorCompradoCliente = 0;
-			String codigoMaiorCompradoCliente = null;
-			for (Venda v : map.get(cpf).getListaVendas()) {
-				if (v.getData().getYear() == ano && v.getValorTotalVenda() > valorMaiorCompradoCliente) {
-					codigoMaiorCompradoCliente = v.getCodigo();
-					valorMaiorCompradoCliente = v.getValorTotalVenda();
-				}
-			}
-			map.get(cpf).setCodigoMaiorCompradoCliente(codigoMaiorCompradoCliente);
-			map.get(cpf).setValorMaiorCompraCliente(valorMaiorCompradoCliente);
-		}
-	}
 	
 	public void procuraMaiorCompraCliente(String cpf, int ano) {
-			double valorMaiorCompradoCliente = 0;
-			String codigoMaiorCompradoCliente = null;
-			for (Venda v : map.get(cpf).getListaVendas()) {
-				if (v.getData().getYear() == ano && v.getValorTotalVenda() > valorMaiorCompradoCliente) {
-					codigoMaiorCompradoCliente = v.getCodigo();
-					valorMaiorCompradoCliente = v.getValorTotalVenda();
-				}
-			}
-			map.get(cpf).setCodigoMaiorCompradoCliente(codigoMaiorCompradoCliente);
-			map.get(cpf).setValorMaiorCompraCliente(valorMaiorCompradoCliente);
-		
-	}
-
-	@Override
-	public void clienteComMaiorCompraUnica(int ano) {
-		procuraMaiorCompraTodososCliente(ano);
-		String cpfMax = null;
-		double maxValorCompra = 0;
-		String codigoMaiorCompra = null;
-		for (String cpf : map.keySet()) {
-			if (map.get(cpf).getValorMaiorCompraCliente() > maxValorCompra) {
-				Info info = map.get(cpf); // info Por Cliente
-				codigoMaiorCompra = info.getCodigoMaiorCompradoCliente();
-				maxValorCompra = info.getValorMaiorCompraCliente();
-				cpfMax = cpf;
+		double valorMaiorCompradoCliente = 0;
+		String codigoMaiorCompradoCliente = null;
+		for (Venda v : map.get(cpf).getListaVendas()) {
+			if (v.getData().getYear() == ano && v.getValorTotalVenda() > valorMaiorCompradoCliente) {
+				codigoMaiorCompradoCliente = v.getCodigo();
+				valorMaiorCompradoCliente = v.getValorTotalVenda();
 			}
 		}
+		map.get(cpf).setCodigoMaiorCompradoCliente(codigoMaiorCompradoCliente);
+		map.get(cpf).setValorMaiorCompraCliente(valorMaiorCompradoCliente);
+	
+}
 
-		System.out.println("Cliente: " + map.get(cpfMax).getCliente().getNome() + " CPF: " + cpfMax + " Compra código: "
-				+ codigoMaiorCompra + " Valor: " + maxValorCompra);
-	}
-
+	
 	public void contabilizaVinhos() {
 
 	}
@@ -451,67 +537,20 @@ public class VendaVinhosServiceImplementation implements IVendaVinhosService {
 	
 	public void calculaPotuacaoTotal() {
 		for (String cpf : map.keySet()) {
-			System.out.println(map.get(cpf).getCliente().getNome());
+			//System.out.println(map.get(cpf).getCliente().getNome());
 			for (Venda v : map.get(cpf).getListaVendas()) {
 				for(Vinho vinho:v.getItens()) {
 					vinho.setPontuacao(calculaPontuacao(vinho, cpf));
-					System.out.println(vinho.getProduto() + " - " + vinho.getVariedade() + " - " + " - " + vinho.getPais() 
-					+ " - "+ vinho.getCategoria() + " - " +  vinho.getSafra() + " - " + vinho.getPreco() + " - Peso: "
-				    + vinho.getPontuacao());
+					//System.out.println(vinho.getProduto() + " - " + vinho.getVariedade() + " - " + " - " + vinho.getPais() 
+					//+ " - "+ vinho.getCategoria() + " - " +  vinho.getSafra() + " - " + vinho.getPreco() + " - Peso: "
+				    //+ vinho.getPontuacao());
 				}
 			}
 		}
-		System.out.println();
+		//System.out.println();
 	}
 	
-	@Override
-	public void  recomendaVinho(String cpf, int quant) {
-		List<Vinho> listaVinhos = new LinkedList<>();
-		for (Venda v : map.get(cpf).getListaVendas()) {
-			for(Vinho vinho:v.getItens()) {
-			    vinho.setPontuacao(calculaPontuacao(vinho, cpf));
-			    listaVinhos.add(vinho);
-			}	
-		}
-		Info info = map.get(cpf);
-		info.calculaValorMediodeVinhoseDesvio(); //calcula media e desvio padrão do preço dos vinhos comprados
-		double valor = info.getValorMedioVinhos() + info.getDesvioPadraoValorMedioVinhos();
-		for (Vinho v : listaVinhos) {
-			v.setDistancia(Math.abs(valor - v.getPreco()));
-		}
-		System.out.println("Quanto maior a pontuação e menor a distância do maior preço que o cliente costuma pagar melhor.");
-		System.out.println("Media: " + info.getValorMedioVinhos() + " Desvio: " + info.getDesvioPadraoValorMedioVinhos() + " soma: " + (info.getValorMedioVinhos() + info.getDesvioPadraoValorMedioVinhos()));
-		Collections.sort(listaVinhos, new VinhoComparator());
-		for (int i = 0; i < (quant < listaVinhos.size() ? quant : listaVinhos.size()); i++) {
-			Vinho vinho = listaVinhos.get(i);
-			System.out.println(vinho.getProduto() + " - " + vinho.getVariedade() + " - " + " - " + vinho.getPais() 
-			+ " - "+ vinho.getCategoria() + " - " +  vinho.getSafra() + " - " + vinho.getPreco() + " - Peso: " + vinho.getPontuacao() + " Dist: " + vinho.getDistancia());		
-		}
 	
-	}
-	
-	public int calculaPontuacao(Vinho vinho, String cpf) {
-		int soma = 0;
-		for (Categoria c : map.get(cpf).getGrafo()) {
-				if(vinho.getProduto().equalsIgnoreCase(c.getTitulo()) && c.getCategoria().equalsIgnoreCase("vinho")) {
-					soma += c.getLista().getLast().getPeso();
-				}
-				if(vinho.getVariedade().equalsIgnoreCase(c.getTitulo()) && c.getCategoria().equalsIgnoreCase("variedade")) {
-					soma += c.getLista().getLast().getPeso();
-				}
-				if(vinho.getPais().equalsIgnoreCase(c.getTitulo()) && c.getCategoria().equalsIgnoreCase("pais")) {
-					soma += c.getLista().getLast().getPeso();
-				}
-				if(vinho.getCategoria().equalsIgnoreCase(c.getTitulo()) && c.getCategoria().equalsIgnoreCase("categoria")) {
-					soma += c.getLista().getLast().getPeso();
-				}
-				if(String.valueOf(vinho.getSafra()).equalsIgnoreCase(c.getTitulo()) && c.getCategoria().equalsIgnoreCase("safra")) {
-					soma += c.getLista().getLast().getPeso();
-				}
-		}
-		return soma;
-	}
-
 }
 
 		

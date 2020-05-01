@@ -11,16 +11,16 @@ import java.util.List;
  * 
  */
 public class Info {
-	Cliente cliente;
-	String codigoMaiorCompradoCliente;
-	double valorMaiorCompraCliente;
-	double totalComprasCliente;
-	List<Venda> listaVendas;
-	LinkedList<Categoria> grafo;
-	
-	double valorMedioVinhos;
-	double desvioPadraoValorMedioVinhos;
-	
+	private Cliente cliente;
+	private String codigoMaiorCompradoCliente;
+	private List<Venda> listaVendas;
+	private LinkedList<Categoria> grafo;
+	private double valorMaiorCompraCliente;
+	private double totalComprasCliente;
+	private double valorMedioVinhos = 0;
+	private double desvioPadraoValorMedioVinhos = 0;
+	private double montanteComprasUltimoAno = 0;
+	//private int quantidadeItensUltimoAno = 0;
 	
 	
 	public Info() {
@@ -61,6 +61,27 @@ public class Info {
 		setDesvioPadraoValorMedioVinhos(desvio);
 	}
 	
+	public void printInfo() {
+		System.out.println("// - // - //    // - // - //    // - // - //");
+		this.getCliente().printCliente();
+		System.out.println("// - // - //");
+		printCompras();
+		System.out.println("Total compras do cliente: " + this.getTotalComprasCliente());
+		System.out.println("// - // - //    // - // - //    // - // - //\n\n");
+	}
+	
+	private void printCompras() {
+		for (Venda venda : this.listaVendas) {
+			System.out.println("Código: " + venda.getCodigo() + " Data: " + venda.getData() + " Cliente: "
+					+ venda.getCpfCliente());
+			for (Vinho vinho : venda.getItens()) {
+				System.out.println("\tProduto: " + vinho.getProduto() + " Variedade: " + vinho.getVariedade()
+						+ " País: " + vinho.getPais() + " Categoria: " + vinho.getCategoria() + " Safra: "
+						+ vinho.getSafra() + " Preço: " + vinho.getPreco());
+			}
+			System.out.println("Valor total dessa venda: " + venda.getValorTotalVenda() + "\n//  //  //");
+		}
+	}
 	public void setCliente(Cliente cliente) {
 		this.cliente = cliente;
 	}
@@ -118,5 +139,21 @@ public class Info {
 	public void setGrafo(LinkedList<Categoria> grafo) {
 		this.grafo = grafo;
 	}
+
+	public double getMontanteComprasUltimoAno() {
+		return montanteComprasUltimoAno;
+	}
+
+	public void setMontanteComprasUltimoAno(double montanteComprasUltimoAno) {
+		this.montanteComprasUltimoAno = montanteComprasUltimoAno;
+	}
+
+//	public int getQuantidadeItensUltimoAno() {
+//		return quantidadeItensUltimoAno;
+//	}
+//
+//	public void setQuantidadeItensUltimoAno(int quantidadeItensUltimoAno) {
+//		this.quantidadeItensUltimoAno = quantidadeItensUltimoAno;
+//	}
 	
 }

@@ -15,6 +15,10 @@ public class Cliente {
 		this.cpf = cpf;
 	}
 
+	public void printCliente() {
+		System.out.println("id: " + this.getId() + " nome: " + this.getNome() + " cpf: " + this.getCpf());
+	}
+	
 	public int getId() {
 		return id;
 	}

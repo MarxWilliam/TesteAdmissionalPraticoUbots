@@ -8,11 +8,11 @@ import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 
 public class DataPadrao {
-	private ZoneId id_brasil = ZoneId.of( "America/Sao_Paulo" );
+	private static final ZoneId id_brasil = ZoneId.of( "America/Sao_Paulo" );
 	
-	public ZonedDateTime parse(String data) {
+	public static ZonedDateTime parse(String data) {
 		LocalDate dt = LocalDate.parse(data, DateTimeFormatter.ofPattern("dd-MM-yyyy"));
-		ZonedDateTime zdt_Brasil = ZonedDateTime.of(dt, LocalTime.of(0, 0), this.id_brasil);
+		ZonedDateTime zdt_Brasil = ZonedDateTime.of(dt, LocalTime.of(0, 0), id_brasil);
 		
 		return zdt_Brasil;
 	}
