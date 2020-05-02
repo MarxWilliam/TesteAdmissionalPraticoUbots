@@ -8,7 +8,7 @@ import java.util.List;
 
 /*
  * Classe que armazena todas as informações referente ao um cliente em específico 
- * 
+ * e suas compras.
  */
 public class Info {
 	private Cliente cliente;
@@ -16,11 +16,12 @@ public class Info {
 	private List<Venda> listaVendas;
 	private LinkedList<Categoria> grafo;
 	private double valorMaiorCompraCliente;
-	private double totalComprasCliente;
+	private double valorTotalComprasCliente;
 	private double valorMedioVinhos = 0;
 	private double desvioPadraoValorMedioVinhos = 0;
 	private double montanteComprasUltimoAno = 0;
-	//private int quantidadeItensUltimoAno = 0;
+	private int quantidadeTotalVInhos = 0; //comprados
+//	private int quantidadeItensUltimoAno = 0;
 	
 	
 	public Info() {
@@ -29,7 +30,7 @@ public class Info {
 
 	public Info(Cliente cliente, double totalComprasCliente, List<Venda> listaVendas) {
 		this.cliente = cliente;
-		this.totalComprasCliente = totalComprasCliente;
+		this.valorTotalComprasCliente = totalComprasCliente;
 		this.listaVendas = listaVendas;
 	}
 
@@ -66,7 +67,7 @@ public class Info {
 		this.getCliente().printCliente();
 		System.out.println("// - // - //");
 		printCompras();
-		System.out.println("Total compras do cliente: " + this.getTotalComprasCliente());
+		System.out.println("Total compras do cliente: " + this.getValorTotalComprasCliente());
 		System.out.println("// - // - //    // - // - //    // - // - //\n\n");
 	}
 	
@@ -86,11 +87,11 @@ public class Info {
 		this.cliente = cliente;
 	}
 	
-	public double getTotalComprasCliente() {
-		return totalComprasCliente;
+	public double getValorTotalComprasCliente() {
+		return valorTotalComprasCliente;
 	}
-	public void setTotalComprasCliente(double totalComprasCliente) {
-		this.totalComprasCliente = totalComprasCliente;
+	public void setValorTotalComprasCliente(double totalComprasCliente) {
+		this.valorTotalComprasCliente = totalComprasCliente;
 	}
 	public List<Venda> getListaVendas() {
 		return listaVendas;
@@ -148,6 +149,14 @@ public class Info {
 		this.montanteComprasUltimoAno = montanteComprasUltimoAno;
 	}
 
+	public int getQuantidadeTotalVInhos() {
+		return quantidadeTotalVInhos;
+	}
+
+	public void setQuantidadeTotalVInhos(int quantidadeTotalVInhos) {
+		this.quantidadeTotalVInhos = quantidadeTotalVInhos;
+	}
+	
 //	public int getQuantidadeItensUltimoAno() {
 //		return quantidadeItensUltimoAno;
 //	}

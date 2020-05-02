@@ -59,14 +59,32 @@ public class VendaVinhosServiceImplementation implements IVendaVinhosService {
 			Info m = map.get(venda.getCpfCliente());
 			m.getListaVendas().add(venda);
 
-			m.setTotalComprasCliente(m.getTotalComprasCliente() + venda.getValorTotalVenda());
+			m.setValorTotalComprasCliente(m.getValorTotalComprasCliente() + venda.getValorTotalVenda());
 		}
+	}
+	
+	public void calculaPotuacaoTotal(boolean print) {
+		for (String cpf : map.keySet()) {
+			System.out.print( print  ? map.get(cpf).getCliente().getNome() + "\n" : "");
+			//System.out.println(map.get(cpf).getCliente().getNome());
+			Info info = map.get(cpf);
+			for (Venda v : info.getListaVendas()) {
+				for(Vinho vinho:v.getItens()) {
+					vinho.setPontuacao(calculaPontuacao(vinho, cpf));
+					System.out.print(print ? vinho.getProduto() + " - " + vinho.getVariedade() + " - " + " - " + vinho.getPais() 
+					+ " - "+ vinho.getCategoria() + " - " +  vinho.getSafra() + " - " + vinho.getPreco() + " - Peso: "
+				    + vinho.getPontuacao() + "\n": "");
+				}
+				
+			}
+		}
+		System.out.print(print? "\n":"");
 	}
 
 	@Override
 	public void  recomendaVinho(String cpf, int quant) {
 		montaMatriz();
-		calculaPotuacaoTotal();
+		calculaPotuacaoTotal(false);
 		List<Vinho> listaVinhos = new LinkedList<>();
 		for (Venda v : map.get(cpf).getListaVendas()) {
 			for(Vinho vinho:v.getItens()) {
@@ -86,14 +104,20 @@ public class VendaVinhosServiceImplementation implements IVendaVinhosService {
 		for (int i = 0; i < (quant < listaVinhos.size() ? quant : listaVinhos.size()); i++) {
 			Vinho vinho = listaVinhos.get(i);
 			System.out.println(vinho.getProduto() + " - " + vinho.getVariedade() + " - " + " - " + vinho.getPais() 
-			+ " - "+ vinho.getCategoria() + " - " +  vinho.getSafra() + " - " + vinho.getPreco() + " - Peso: " + vinho.getPontuacao() + " Dist: " + vinho.getDistancia());		
+			+ " - "+ vinho.getCategoria() + " - " +  vinho.getSafra() + " - R$:" + vinho.getPreco() + " - Peso: " + vinho.getPontuacao() + "% Dist: " + vinho.getDistancia());		
 		}
 	
 	}
 	
-	public int calculaPontuacao(Vinho vinho, String cpf) {
-		int soma = 0;
-		for (Categoria c : map.get(cpf).getGrafo()) {
+	@Override
+	public double calculaPontuacao(Vinho vinho, String cpf) {
+		double soma = 0;
+		Info info = map.get(cpf);
+		info.setQuantidadeTotalVInhos(0);
+		for (Venda v : info.getListaVendas()) {
+			info.setQuantidadeTotalVInhos(info.getQuantidadeTotalVInhos()+v.getItens().size());
+		}
+		for (Categoria c : info.getGrafo()) {
 				if(vinho.getProduto().equalsIgnoreCase(c.getTitulo()) && c.getCategoria().equalsIgnoreCase("vinho")) {
 					soma += c.getLista().getLast().getPeso();
 				}
@@ -110,7 +134,7 @@ public class VendaVinhosServiceImplementation implements IVendaVinhosService {
 					soma += c.getLista().getLast().getPeso();
 				}
 		}
-		return soma;
+		return (soma/(double)(info.getQuantidadeTotalVInhos()*5))*100.0;
 	}
 
 	public void procuraMaiorCompraTodososCliente(int ano) {
@@ -158,7 +182,7 @@ public class VendaVinhosServiceImplementation implements IVendaVinhosService {
 		//this.printMap();
 		for(String cpf : map.keySet()) {
 			Info c = map.get(cpf);
-			System.out.println("Cliente: " + c.getCliente().getNome() + " CPF: " + cpf + " Montante: " + c.getTotalComprasCliente());
+			System.out.println("Cliente: " + c.getCliente().getNome() + " CPF: " + cpf + " Montante: " + c.getValorTotalComprasCliente());
 		}
 	}
 	
@@ -229,7 +253,7 @@ public class VendaVinhosServiceImplementation implements IVendaVinhosService {
 				Info i1 = (Info) a.getValue();
 				Info i2 = (Info) b.getValue();
 
-				return (int) (i2.getTotalComprasCliente() - i1.getTotalComprasCliente());
+				return (int) (i2.getValorTotalComprasCliente() - i1.getValorTotalComprasCliente());
 			}
 		});
 
@@ -534,23 +558,6 @@ public class VendaVinhosServiceImplementation implements IVendaVinhosService {
 			}
 		}
 	}
-	
-	public void calculaPotuacaoTotal() {
-		for (String cpf : map.keySet()) {
-			//System.out.println(map.get(cpf).getCliente().getNome());
-			for (Venda v : map.get(cpf).getListaVendas()) {
-				for(Vinho vinho:v.getItens()) {
-					vinho.setPontuacao(calculaPontuacao(vinho, cpf));
-					//System.out.println(vinho.getProduto() + " - " + vinho.getVariedade() + " - " + " - " + vinho.getPais() 
-					//+ " - "+ vinho.getCategoria() + " - " +  vinho.getSafra() + " - " + vinho.getPreco() + " - Peso: "
-				    //+ vinho.getPontuacao());
-				}
-			}
-		}
-		//System.out.println();
-	}
-	
-	
 }
 
 		

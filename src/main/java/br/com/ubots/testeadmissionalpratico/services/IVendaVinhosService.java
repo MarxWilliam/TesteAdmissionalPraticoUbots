@@ -2,6 +2,7 @@ package br.com.ubots.testeadmissionalpratico.services;
 
 import java.time.ZonedDateTime;
 
+import br.com.ubots.testeadmissionalpratico.model.Vinho;
 import br.com.ubots.testeadmissionalpratico.util.DataPadrao;
 
 public interface IVendaVinhosService {
@@ -17,4 +18,5 @@ public interface IVendaVinhosService {
 	//	# 4 - Recomende um vinho para um determinado cliente a partir do histórico
 	public void  recomendaVinho(String cpf, int quant); //cpf do cliente e quantidade de recomendações.
 
+	public double calculaPontuacao(Vinho vinho, String cpf);
 }

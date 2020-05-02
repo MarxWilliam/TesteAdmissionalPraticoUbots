@@ -1610,5 +1610,93 @@
                 }
             ],
             "valorTotal": 357.9
+        },
+        {
+            "codigo": "7a6aeaec-18db-4339-b87a-500dac29e1cd",
+            "data": "03-11-2016",
+            "cliente": "0000.000.000.11",
+            "itens": [
+                {
+                    "produto": "Punto Final",
+                    "variedade": "Sauvignon Blanc",
+                    "pais": "Argentina",
+                    "categoria": "Branco",
+                    "safra": "2015",
+                    "preco": 59.9
+                },
+{
+                    "produto": "Punto Final",
+                    "variedade": "Sauvignon Blanc",
+                    "pais": "Argentina",
+                    "categoria": "Branco",
+                    "safra": "2015",
+                    "preco": 59.9
+                },
+{
+                    "produto": "Punto Final",
+                    "variedade": "Sauvignon Blanc",
+                    "pais": "Argentina",
+                    "categoria": "Branco",
+                    "safra": "2015",
+                    "preco": 59.9
+                },
+{
+                    "produto": "Punto Final",
+                    "variedade": "Sauvignon Blanc",
+                    "pais": "Argentina",
+                    "categoria": "Branco",
+                    "safra": "2015",
+                    "preco": 59.9
+                },
+{
+                    "produto": "Punto Final",
+                    "variedade": "Sauvignon Blanc",
+                    "pais": "Argentina",
+                    "categoria": "Branco",
+                    "safra": "2015",
+                    "preco": 59.9
+                },
+{
+                    "produto": "Punto Final",
+                    "variedade": "Sauvignon Blanc",
+                    "pais": "Argentina",
+                    "categoria": "Branco",
+                    "safra": "2015",
+                    "preco": 59.9
+                },
+{
+                    "produto": "Punto Final",
+                    "variedade": "Sauvignon Blanc",
+                    "pais": "Argentina",
+                    "categoria": "Branco",
+                    "safra": "2015",
+                    "preco": 59.9
+                },
+{
+                    "produto": "Punto Final",
+                    "variedade": "Sauvignon Blanc",
+                    "pais": "Argentina",
+                    "categoria": "Branco",
+                    "safra": "2015",
+                    "preco": 59.9
+                },
+{
+                    "produto": "Punto Final",
+                    "variedade": "Sauvignon Blanc",
+                    "pais": "Argentina",
+                    "categoria": "Branco",
+                    "safra": "2015",
+                    "preco": 59.9
+                },
+{
+                    "produto": "Punto Final",
+                    "variedade": "Sauvignon Blanc",
+                    "pais": "Argentina",
+                    "categoria": "Branco",
+                    "safra": "2015",
+                    "preco": 59.9
+                }
+            ],
+            "valorTotal": 357.9
         }
     ]
