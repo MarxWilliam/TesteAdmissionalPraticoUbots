@@ -15,6 +15,7 @@ public class Info {
 	private String codigoMaiorCompradoCliente;
 	private List<Venda> listaVendas;
 	private LinkedList<Categoria> grafo;
+	private LinkedList<Celula> tabelaSimples;
 	private double valorMaiorCompraCliente;
 	private double valorTotalComprasCliente;
 	private double valorMedioVinhos = 0;
@@ -156,6 +157,14 @@ public class Info {
 	public void setQuantidadeTotalVInhos(int quantidadeTotalVInhos) {
 		this.quantidadeTotalVInhos = quantidadeTotalVInhos;
 	}
+
+	public LinkedList<Celula> getTabelaSimples() {
+		return tabelaSimples;
+	}
+
+	public void setTabelaSimples(LinkedList<Celula> tabelaSimples) {
+		this.tabelaSimples = tabelaSimples;
+	}
 	
 //	public int getQuantidadeItensUltimoAno() {
 //		return quantidadeItensUltimoAno;
@@ -164,5 +173,7 @@ public class Info {
 //	public void setQuantidadeItensUltimoAno(int quantidadeItensUltimoAno) {
 //		this.quantidadeItensUltimoAno = quantidadeItensUltimoAno;
 //	}
+	
+	
 	
 }

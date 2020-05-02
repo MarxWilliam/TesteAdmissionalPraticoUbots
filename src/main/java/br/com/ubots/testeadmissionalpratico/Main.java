@@ -3,11 +3,12 @@ package br.com.ubots.testeadmissionalpratico;
 import br.com.ubots.testeadmissionalpratico.model.Vinho;
 import br.com.ubots.testeadmissionalpratico.services.IVendaVinhosService;
 import br.com.ubots.testeadmissionalpratico.services.VendaVinhosServiceImplementation;
+import br.com.ubots.testeadmissionalpratico.services.VendaVinhosServiceImplementation2;
 import br.com.ubots.testeadmissionalpratico.util.DataPadrao;
 
 public class Main {
 	public static void main(String[] args) {
-		VendaVinhosServiceImplementation vinhos = new VendaVinhosServiceImplementation();
+		VendaVinhosServiceImplementation2 vinhos = new VendaVinhosServiceImplementation2();
 		vinhos.maiorValorTotaldeComprasporCliente();
 		
 		System.out.println("\n~ ~ ~ ~ ~ ~ ~ ~ ~ ~  ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ \n");
@@ -23,7 +24,6 @@ public class Main {
 		vinhos.recomendaVinho("00000000001", 1);
 		
 		System.out.println("\n~ ~ ~ ~ ~ ~ ~ ~ ~ ~  ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ \n");
-		//vinhos.calculaPotuacaoTotal();
 		
 		Vinho vinho = new Vinho();
 		vinho.setProduto("Vinho que o cliente não comprou");
